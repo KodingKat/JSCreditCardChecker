@@ -29,22 +29,54 @@ const batch = [valid1, valid2, valid3, valid4, valid5, invalid1, invalid2, inval
 const validateCred = ccArray => {
     let iter = 1;
     let sum = 0;
-    for (let x=ccArray.length; x>0; x--) {
+    for (let x=ccArray.length-1; x>=0; x--) {
         // Doubling every second digit, if second digit doubeld is > 9, subtracting 9. Adding all outcomes to sum.
         if (iter % 2 === 0) {
-            console.log(x)
-            console.log(iter)
-            let i = x*2;
+            let i = ccArray[x]*2;
             if (i > 9) {
                 i -= 9;
             };
             sum += i;
         } else {
-            sum += x;
+            sum += ccArray[x];
         }
+        iter+=1;
     }
-    if (sum%20===0);
+    if (sum%10===0) {
+        return true;
+    } else return false;
 }
 
 
-console.log(validateCred(valid1));
+// Function that returns array of invalid cc numbers
+const findInvalidCards = ccArray => {
+    let invCards = [];
+    for (let x=0; x<ccArray.length-1; x++) {
+        if (validateCred(ccArray[x])===false) {
+            invCards.push(ccArray[x]);
+        } 
+    }
+    return invCards
+};
+
+
+// Function that returns an array of CC companies issue invalid cc
+const idInvalidCardCompanies = invCcArray => {
+    let invCardCompArray = [];
+    for (let x=0; x>invCcArray.length-1; x++) {
+        if (invCcArray[x][0]===3 && !invCardCompArray.includes('Amex')) {
+            invCardCompArray.push('Amex');
+        } else if (invCcArray[x][0]===4 && !invCardCompArray.includes('Visa')) {
+            invCardCompArray.push('Visa')
+        } else if(invCcArray[x][0]===5 && !invCardCompArray.includes('Mastercard')) {
+            invCardCompArray.push('Mastercard')
+        } else if (invCcArray[x][0]===6 && !invCardCompArray.includes('Discover')) {
+            invCardCompArray.push('Discover')
+        } else console.log('Company not found.')
+    }
+    return invCardCompArray
+}
+
+let naught= findInvalidCards(batch)
+
+console.log(idInvalidCardCompanies(naught))
